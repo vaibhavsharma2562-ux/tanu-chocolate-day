@@ -3,61 +3,80 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Happy Chocolate Day Tanu 🍫❤️</title>
+<title>The Sweetness Heist 🍫❤️</title>
 
 <style>
 body{
 margin:0;
 font-family:Segoe UI, sans-serif;
-background:linear-gradient(135deg,#4b1e1e,#8b0000);
+background:linear-gradient(135deg,#3b0a0a,#8b0000);
 color:white;
 text-align:center;
-overflow-x:hidden;
+overflow:hidden;
 }
 
 .section{
 display:none;
-min-height:100vh;
-padding:30px;
+height:100vh;
 justify-content:center;
 align-items:center;
 flex-direction:column;
+padding:30px;
 }
 
-.active{
-display:flex;
-}
+.active{display:flex;}
 
 button{
-padding:10px 20px;
-margin:10px;
+padding:12px 25px;
+margin:15px;
 border:none;
-border-radius:25px;
-font-size:16px;
-cursor:pointer;
+border-radius:30px;
 background:#ff4d4d;
 color:white;
+font-size:16px;
+cursor:pointer;
 transition:0.3s;
 }
 
-button:hover{
-transform:scale(1.1);
+button:hover{transform:scale(1.1);}
+
+.heart{
+width:120px;
+height:120px;
+background:red;
+position:relative;
+transform:rotate(-45deg);
+margin:30px;
+cursor:pointer;
 }
 
-.meter{
-width:80%;
-height:20px;
+.heart:before,
+.heart:after{
+content:"";
+width:120px;
+height:120px;
+background:red;
+border-radius:50%;
+position:absolute;
+}
+
+.heart:before{top:-60px; left:0;}
+.heart:after{left:60px; top:0;}
+
+.progress{
+width:250px;
+height:15px;
 background:#333;
 border-radius:20px;
-margin:15px auto;
 overflow:hidden;
+margin-top:15px;
 }
 
-.meter-fill{
+.progress-fill{
 height:100%;
 width:0%;
 background:#ff4d4d;
-transition:0.5s;
+transition:0.2s;
 }
 
 .slideshow img{
@@ -66,15 +85,16 @@ border-radius:15px;
 display:none;
 }
 
-.choco{
-width:80px;
-height:120px;
-background:brown;
-border-radius:15px;
-margin:20px;
-display:inline-block;
-position:relative;
-cursor:pointer;
+.rain{
+position:absolute;
+top:-50px;
+font-size:20px;
+animation:fall 4s linear infinite;
+}
+
+@keyframes fall{
+0%{transform:translateY(0);}
+100%{transform:translateY(110vh);}
 }
 
 .popup{
@@ -83,10 +103,11 @@ top:0;
 left:0;
 width:100%;
 height:100%;
-background:rgba(0,0,0,0.8);
+background:rgba(0,0,0,0.85);
 display:none;
 justify-content:center;
 align-items:center;
+flex-direction:column;
 }
 
 .popup img{
@@ -98,49 +119,46 @@ border-radius:20px;
 </head>
 <body>
 
-<!-- INTRO -->
-<div class="section active" id="intro">
-<h1>Happy Chocolate Day Tanu 🍫❤️</h1>
-<p>These 6 months have been sweeter than any chocolate.
-Today we create something special — our love edition chocolate.</p>
-<button onclick="next('lab')">Start Chocolate Lab</button>
+<!-- SCREEN 1 -->
+<div class="section active" id="news">
+<h1>🚨 GLOBAL EMERGENCY 🚨</h1>
+<p>All chocolate in the world has lost its sweetness.</p>
+<button onclick="next('file')">Open Secret File</button>
 </div>
 
-<!-- CHOCOLATE LAB -->
-<div class="section" id="lab">
-<h2>Create Tanu Special Chocolate 🍫</h2>
-<p>Step 1: Choose Sweetness</p>
-<button onclick="addLove()">Extra Sweet</button>
-<button onclick="addLove()">Perfect Sweet</button>
-
-<p>Step 2: Choose Filling</p>
-<button onclick="addLove()">Love</button>
-<button onclick="addLove()">Memories</button>
-
-<p>Step 3: Add Magic</p>
-<button onclick="addLove()">6 Months Magic</button>
-<button onclick="addLove()">Forever Promise</button>
-
-<div class="meter">
-<div class="meter-fill" id="loveMeter"></div>
+<!-- SCREEN 2 -->
+<div class="section" id="file">
+<h2>Confidential File: Tanu</h2>
+<p>Status: Extremely Sweet</p>
+<p>Danger Level: Melts Vaibhav Instantly</p>
+<button onclick="next('extract')">Extract Sweetness Sample</button>
 </div>
 
-<button onclick="next('quiz')">Chocolate Ready 🍫</button>
+<!-- SCREEN 3 -->
+<div class="section" id="extract">
+<h2>Hold the Heart to Analyze Sweetness ❤️</h2>
+<div class="heart" 
+onmousedown="startHold()" 
+onmouseup="stopHold()" 
+ontouchstart="startHold()" 
+ontouchend="stopHold()">
+</div>
+<div class="progress">
+<div class="progress-fill" id="progress"></div>
+</div>
+<p id="analyzeText"></p>
 </div>
 
-<!-- QUIZ -->
-<div class="section" id="quiz">
-<h2>If I were a chocolate, what would I be?</h2>
-<button onclick="correct()">Dairy Milk</button>
-<button onclick="wrong()">Expired</button>
-<button onclick="wrong()">Melted</button>
-<p id="quizMsg"></p>
-<button onclick="next('slideshow')">Continue</button>
+<!-- SCREEN 4 -->
+<div class="section" id="restore">
+<h2>Sweetness Source Confirmed.</h2>
+<p>It was never in chocolate... it was always in you.</p>
+<button onclick="sweetRain()">Restore World Sweetness</button>
 </div>
 
-<!-- SLIDESHOW -->
+<!-- SCREEN 5 -->
 <div class="section" id="slideshow">
-<h2>Premium Chocolate Mode Unlocked 🍫✨</h2>
+<h2>Sweetness Restored Globally 🍫✨</h2>
 <div class="slideshow">
 <img src="pic1.jpeg">
 <img src="pic2.jpeg">
@@ -148,71 +166,60 @@ Today we create something special — our love edition chocolate.</p>
 <img src="pic4.jpeg">
 <img src="pic5.jpeg">
 </div>
-<button onclick="next('detective')">Uh Oh... 🍫</button>
+<button onclick="next('final')">Final Truth</button>
 </div>
 
-<!-- INVESTIGATION -->
-<div class="section" id="detective">
-<h2>ALERT 🚨 Chocolates Missing!</h2>
-<p>Suspect: Tanu 👀</p>
-<button onclick="reveal()">Investigate</button>
-<p id="detectMsg"></p>
-<button onclick="next('battle')">Final Battle</button>
-</div>
-
-<!-- LOVE VS CHOCOLATE -->
-<div class="section" id="battle">
-<h2>Love vs Chocolate</h2>
-<p>Chocolate Level</p>
-<div class="meter"><div class="meter-fill" id="chocoMeter"></div></div>
-<p>Love Level</p>
-<div class="meter"><div class="meter-fill" id="finalLove"></div></div>
-<button onclick="feed()">Feed Chocolate</button>
-<button onclick="hug()">Give Hug</button>
-<button onclick="next('final')">Finish</button>
-</div>
-
-<!-- FINAL -->
+<!-- SCREEN 6 -->
 <div class="section" id="final">
-<h2>Tanu + Vaibhav = Forever Sweet ❤️</h2>
-<p>These 6 months were just the beginning.
-One day it will be 6 years and 60 years.
-Our love will always be sweeter than chocolate.</p>
+<h2>For 6 Months...</h2>
+<p>Through ups and downs, your presence made everything sweeter.
+One day it will be 6 years.
+Then 60 years.
+I choose you — every Chocolate Day, every year.</p>
 
-<div>
-<div class="choco" onclick="showPic()"></div>
-<div class="choco" onclick="showPic()"></div>
+<div style="display:flex; gap:40px;">
+<div class="heart" onclick="showPic()"></div>
+<div class="heart" onclick="showPic()"></div>
 </div>
-<p>Click the chocolates 🍫</p>
+<p>Click the hearts ❤️</p>
 </div>
 
 <div class="popup" id="popup" onclick="closePop()">
+<h2>Tanu + Vaibhav = Forever Sweet 🍫❤️</h2>
 <img src="pic1.jpeg">
 </div>
 
 <script>
-
-let love=0;
-function addLove(){
-love+=15;
-document.getElementById("loveMeter").style.width=love+"%";
-}
 
 function next(id){
 document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
 document.getElementById(id).classList.add("active");
 }
 
-function correct(){
-document.getElementById("quizMsg").innerText="Correct! I’m sweet because of you 😌";
+let holdInterval;
+let progress=0;
+
+function startHold(){
+holdInterval=setInterval(()=>{
+progress+=3;
+document.getElementById("progress").style.width=progress+"%";
+
+if(progress>30) document.getElementById("analyzeText").innerText="Analyzing smile...";
+if(progress>60) document.getElementById("analyzeText").innerText="Detecting 6 months of love...";
+if(progress>=100){
+clearInterval(holdInterval);
+next('restore');
+}
+},100);
 }
 
-function wrong(){
-document.getElementById("quizMsg").innerText="Wrong! Try again chocolate brain 😄";
+function stopHold(){
+clearInterval(holdInterval);
 }
 
 let slideIndex=0;
 const slides=document.querySelectorAll(".slideshow img");
+
 function showSlides(){
 slides.forEach(s=>s.style.display="none");
 slideIndex++;
@@ -222,24 +229,22 @@ setTimeout(showSlides,2500);
 }
 showSlides();
 
-function reveal(){
-document.getElementById("detectMsg").innerText="The real chocolate thief stole my heart 6 months ago ❤️";
+function sweetRain(){
+for(let i=0;i<20;i++){
+let drop=document.createElement("div");
+drop.className="rain";
+drop.innerText="🍫";
+drop.style.left=Math.random()*100+"vw";
+drop.style.animationDuration=(Math.random()*3+2)+"s";
+document.body.appendChild(drop);
 }
-
-let c=0;
-let l=0;
-function feed(){
-c+=10;
-document.getElementById("chocoMeter").style.width=c+"%";
-}
-function hug(){
-l+=15;
-document.getElementById("finalLove").style.width=l+"%";
+setTimeout(()=>next('slideshow'),2000);
 }
 
 function showPic(){
 document.getElementById("popup").style.display="flex";
 }
+
 function closePop(){
 document.getElementById("popup").style.display="none";
 }
@@ -248,4 +253,3 @@ document.getElementById("popup").style.display="none";
 
 </body>
 </html>
-
