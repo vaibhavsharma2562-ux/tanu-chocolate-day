@@ -3,251 +3,337 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Sweetness Heist 🍫❤️</title>
+<title>Tanya ❤️ | From Vaibhav</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Poppins:wght@300;400&display=swap" rel="stylesheet">
 
 <style>
 body{
 margin:0;
-font-family:Segoe UI, sans-serif;
-background:linear-gradient(135deg,#3b0a0a,#8b0000);
-color:white;
+background:#140909;
+font-family:'Poppins',sans-serif;
+color:#fbe9dc;
 text-align:center;
-overflow:hidden;
+overflow-x:hidden;
 }
 
-.section{
-display:none;
-height:100vh;
-justify-content:center;
-align-items:center;
-flex-direction:column;
-padding:30px;
-}
-
-.active{display:flex;}
-
-button{
-padding:12px 25px;
-margin:15px;
-border:none;
-border-radius:30px;
-background:#ff4d4d;
-color:white;
-font-size:16px;
-cursor:pointer;
-transition:0.3s;
-}
-
-button:hover{transform:scale(1.1);}
-
-.heart{
-width:120px;
-height:120px;
-background:red;
-position:relative;
-transform:rotate(-45deg);
-margin:30px;
-cursor:pointer;
-}
-
-.heart:before,
-.heart:after{
-content:"";
-width:120px;
-height:120px;
-background:red;
-border-radius:50%;
-position:absolute;
-}
-
-.heart:before{top:-60px; left:0;}
-.heart:after{left:60px; top:0;}
-
-.progress{
-width:250px;
-height:15px;
-background:#333;
-border-radius:20px;
-overflow:hidden;
-margin-top:15px;
-}
-
-.progress-fill{
-height:100%;
-width:0%;
-background:#ff4d4d;
-transition:0.2s;
-}
-
-.slideshow img{
-width:250px;
-border-radius:15px;
-display:none;
-}
-
-.rain{
-position:absolute;
-top:-50px;
-font-size:20px;
-animation:fall 4s linear infinite;
-}
-
-@keyframes fall{
-0%{transform:translateY(0);}
-100%{transform:translateY(110vh);}
-}
-
-.popup{
+/* Intro Screen */
+#introScreen{
 position:fixed;
 top:0;
 left:0;
 width:100%;
 height:100%;
-background:rgba(0,0,0,0.85);
-display:none;
+background:#000;
+display:flex;
+flex-direction:column;
 justify-content:center;
 align-items:center;
-flex-direction:column;
+color:white;
+z-index:9999;
+animation:fadeOut 4s forwards;
+animation-delay:4s;
 }
 
-.popup img{
-width:300px;
-border-radius:20px;
+#introScreen h1{
+font-size:40px;
+letter-spacing:3px;
+animation:glow 2s infinite alternate;
 }
 
+@keyframes glow{
+from{text-shadow:0 0 10px #ff8c7a;}
+to{text-shadow:0 0 25px #ffb3a7;}
+}
+
+@keyframes fadeOut{
+to{opacity:0;visibility:hidden;}
+}
+
+canvas{
+position:fixed;
+top:0;
+left:0;
+z-index:-1;
+}
+
+/* Chocolate Drip */
+.drip{
+height:120px;
+background:#3a1c1c;
+position:relative;
+}
+.drip:after{
+content:"";
+position:absolute;
+top:100%;
+width:100%;
+height:80px;
+background:radial-gradient(circle at 15% 0,#3a1c1c 50px,transparent 51px),
+radial-gradient(circle at 40% 0,#3a1c1c 60px,transparent 61px),
+radial-gradient(circle at 70% 0,#3a1c1c 50px,transparent 51px);
+background-repeat:no-repeat;
+}
+
+/* Sections */
+section{
+padding:80px 20px;
+max-width:900px;
+margin:auto;
+opacity:0;
+transform:translateY(40px);
+transition:1.5s;
+}
+section.show{
+opacity:1;
+transform:translateY(0);
+}
+
+h1,h2{font-family:'Playfair Display',serif;}
+
+/* Cube */
+.cube-container{
+width:260px;
+height:260px;
+margin:50px auto;
+perspective:1000px;
+}
+.cube{
+width:100%;
+height:100%;
+position:relative;
+transform-style:preserve-3d;
+animation:rotate 25s infinite linear;
+}
+.cube div{
+position:absolute;
+width:260px;
+height:260px;
+}
+.cube img{
+width:100%;
+height:100%;
+object-fit:cover;
+border-radius:15px;
+}
+.front{transform:rotateY(0deg) translateZ(130px);}
+.back{transform:rotateY(180deg) translateZ(130px);}
+.right{transform:rotateY(90deg) translateZ(130px);}
+.left{transform:rotateY(-90deg) translateZ(130px);}
+.top{transform:rotateX(90deg) translateZ(130px);}
+.bottom{transform:rotateX(-90deg) translateZ(130px);}
+
+@keyframes rotate{
+from{transform:rotateX(0) rotateY(0);}
+to{transform:rotateX(360deg) rotateY(360deg);}
+}
+
+.slide{display:none;}
+.slide img{
+width:100%;
+border-radius:15px;
+box-shadow:0 10px 30px rgba(0,0,0,0.6);
+}
+
+button{
+background:#ffb3a7;
+border:none;
+padding:12px 25px;
+border-radius:30px;
+cursor:pointer;
+margin:10px;
+transition:0.3s;
+}
+button:hover{
+transform:scale(1.08);
+background:#ff8c7a;
+}
+
+.hearts{
+position:fixed;
+font-size:20px;
+animation:float 6s linear infinite;
+}
+@keyframes float{
+from{transform:translateY(100vh);}
+to{transform:translateY(-10vh);}
+}
 </style>
 </head>
+
 <body>
 
-<!-- SCREEN 1 -->
-<div class="section active" id="news">
-<h1>🚨 GLOBAL EMERGENCY 🚨</h1>
-<p>All chocolate in the world has lost its sweetness.</p>
-<button onclick="next('file')">Open Secret File</button>
+<div id="introScreen">
+<h1>Vaibhav Presents...</h1>
+<p>A Little Universe For Tanya ❤️</p>
 </div>
 
-<!-- SCREEN 2 -->
-<div class="section" id="file">
-<h2>Confidential File: Tanu</h2>
-<p>Status: Extremely Sweet</p>
-<p>Danger Level: Melts Vaibhav Instantly</p>
-<button onclick="next('extract')">Extract Sweetness Sample</button>
-</div>
+<canvas id="stars"></canvas>
 
-<!-- SCREEN 3 -->
-<div class="section" id="extract">
-<h2>Hold the Heart to Analyze Sweetness ❤️</h2>
-<div class="heart" 
-onmousedown="startHold()" 
-onmouseup="stopHold()" 
-ontouchstart="startHold()" 
-ontouchend="stopHold()">
-</div>
-<div class="progress">
-<div class="progress-fill" id="progress"></div>
-</div>
-<p id="analyzeText"></p>
-</div>
+<audio autoplay loop>
+<source src="music.mp3" type="audio/mpeg">
+</audio>
 
-<!-- SCREEN 4 -->
-<div class="section" id="restore">
-<h2>Sweetness Source Confirmed.</h2>
-<p>It was never in chocolate... it was always in you.</p>
-<button onclick="sweetRain()">Restore World Sweetness</button>
-</div>
+<div class="drip"></div>
 
-<!-- SCREEN 5 -->
-<div class="section" id="slideshow">
-<h2>Sweetness Restored Globally 🍫✨</h2>
-<div class="slideshow">
-<img src="pic1.jpeg">
-<img src="pic2.jpeg">
-<img src="pic3.jpeg">
-<img src="pic4.jpeg">
-<img src="pic5.jpeg">
-</div>
-<button onclick="next('final')">Final Truth</button>
-</div>
+<section>
+<h1>For Tanya ❤️</h1>
+<p id="story"></p>
+</section>
 
-<!-- SCREEN 6 -->
-<div class="section" id="final">
-<h2>For 6 Months...</h2>
-<p>Through ups and downs, your presence made everything sweeter.
-One day it will be 6 years.
-Then 60 years.
-I choose you — every Chocolate Day, every year.</p>
+<section>
+<h2>Our Love In 3D</h2>
+<div class="cube-container" id="cubeBox">
+<div class="cube" id="cube">
+<div class="front"><img src="pic1.jpg.jpeg"></div>
+<div class="back"><img src="pic2.jpg.jpeg"></div>
+<div class="right"><img src="pic3.jpg.jpeg"></div>
+<div class="left"><img src="pic4.jpg.jpeg"></div>
+<div class="top"><img src="pic5.jpg.jpeg"></div>
+<div class="bottom"><img src="pic6.jpg.jpeg"></div>
+</div>
+</div>
+</section>
 
-<div style="display:flex; gap:40px;">
-<div class="heart" onclick="showPic()"></div>
-<div class="heart" onclick="showPic()"></div>
-</div>
-<p>Click the hearts ❤️</p>
-</div>
+<section>
+<h2>Our Journey</h2>
 
-<div class="popup" id="popup" onclick="closePop()">
-<h2>Tanu + Vaibhav = Forever Sweet 🍫❤️</h2>
-<img src="pic1.jpeg">
-</div>
+<div class="slide"><img src="pic7.jpg.jpeg"></div>
+<div class="slide"><img src="pic8.jpg.jpeg"></div>
+<div class="slide"><img src="pic9.jpg.jpeg"></div>
+<div class="slide"><img src="pic10.jpg.jpeg"></div>
+<div class="slide"><img src="pic11.jpg.jpeg"></div>
+<div class="slide"><img src="pic12.jpg.jpeg"></div>
+<div class="slide"><img src="pic13.jpg.jpeg"></div>
+<div class="slide"><img src="pic14.jpg.jpeg"></div>
+<div class="slide"><img src="pic15.jpg.jpeg"></div>
+<div class="slide"><img src="pic16.jpg.jpeg"></div>
+<div class="slide"><img src="pic17.jpg.jpeg"></div>
+<div class="slide"><img src="pic18.jpg.jpeg"></div>
+<div class="slide"><img src="pic19.jpg.jpeg"></div>
+<div class="slide"><img src="pic20.jpg.jpeg"></div>
+
+</section>
+
+<section>
+<h2>Choose Our Future</h2>
+<button onclick="future('travel')">Travel The World 🌍</button>
+<button onclick="future('home')">Build Our Dream Home 🏡</button>
+<p id="futureText"></p>
+</section>
+
+<section>
+<h2 id="finalText"></h2>
+</section>
 
 <script>
 
-function next(id){
-document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
-document.getElementById(id).classList.add("active");
+/* Cinematic reveal */
+let sections=document.querySelectorAll("section");
+let delay=6000;
+sections.forEach(s=>{
+setTimeout(()=>s.classList.add("show"),delay);
+delay+=30000;
+});
+
+/* Typewriter */
+const text=`You entered my life quietly.
+And everything changed.
+
+Time feels softer.
+Laughter feels deeper.
+Life feels sweeter.
+
+If love means choosing someone daily,
+I choose you.
+Again.
+And again.
+
+Happy Chocolate Day Tanya ❤️`;
+
+let i=0;
+function type(){
+if(i<text.length){
+document.getElementById("story").innerHTML+=text.charAt(i);
+i++;
+setTimeout(type,70);
 }
-
-let holdInterval;
-let progress=0;
-
-function startHold(){
-holdInterval=setInterval(()=>{
-progress+=3;
-document.getElementById("progress").style.width=progress+"%";
-
-if(progress>30) document.getElementById("analyzeText").innerText="Analyzing smile...";
-if(progress>60) document.getElementById("analyzeText").innerText="Detecting 6 months of love...";
-if(progress>=100){
-clearInterval(holdInterval);
-next('restore');
 }
-},100);
-}
+type();
 
-function stopHold(){
-clearInterval(holdInterval);
-}
-
+/* Slideshow */
 let slideIndex=0;
-const slides=document.querySelectorAll(".slideshow img");
-
+showSlides();
 function showSlides(){
-slides.forEach(s=>s.style.display="none");
+let slides=document.getElementsByClassName("slide");
+for(let i=0;i<slides.length;i++){
+slides[i].style.display="none";
+}
 slideIndex++;
 if(slideIndex>slides.length){slideIndex=1;}
 slides[slideIndex-1].style.display="block";
-setTimeout(showSlides,2500);
-}
-showSlides();
-
-function sweetRain(){
-for(let i=0;i<20;i++){
-let drop=document.createElement("div");
-drop.className="rain";
-drop.innerText="🍫";
-drop.style.left=Math.random()*100+"vw";
-drop.style.animationDuration=(Math.random()*3+2)+"s";
-document.body.appendChild(drop);
-}
-setTimeout(()=>next('slideshow'),2000);
+setTimeout(showSlides,6000);
 }
 
-function showPic(){
-document.getElementById("popup").style.display="flex";
+/* Future */
+function future(choice){
+if(choice=="travel"){
+document.getElementById("futureText").innerHTML="We explore the world — but home is wherever you are.";
+}
+if(choice=="home"){
+document.getElementById("futureText").innerHTML="We build a peaceful world filled with love and chocolate.";
+}
 }
 
-function closePop(){
-document.getElementById("popup").style.display="none";
+/* Dramatic ending */
+setTimeout(()=>{
+document.getElementById("finalText").innerHTML="Tanya... Will You Always Be Mine?";
+explodeCube();
+},180000);
+
+function explodeCube(){
+document.getElementById("cubeBox").style.display="none";
+for(let i=0;i<80;i++){
+let h=document.createElement("div");
+h.className="hearts";
+h.innerHTML="❤️";
+h.style.left=Math.random()*100+"vw";
+h.style.fontSize=(15+Math.random()*30)+"px";
+document.body.appendChild(h);
+setTimeout(()=>h.remove(),6000);
 }
+}
+
+/* Chocolate rain */
+setInterval(()=>{
+let c=document.createElement("div");
+c.className="hearts";
+c.innerHTML="🍫";
+c.style.left=Math.random()*100+"vw";
+document.body.appendChild(c);
+setTimeout(()=>c.remove(),6000);
+},2000);
+
+/* Stars */
+let canvas=document.getElementById("stars");
+let ctx=canvas.getContext("2d");
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
+let stars=[];
+for(let i=0;i<200;i++){
+stars.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*2});
+}
+function draw(){
+ctx.clearRect(0,0,canvas.width,canvas.height);
+ctx.fillStyle="white";
+stars.forEach(s=>{
+ctx.beginPath();
+ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+ctx.fill();
+});
+requestAnimationFrame(draw);
+}
+draw();
 
 </script>
 
