@@ -3,48 +3,62 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tanya ❤️ | From Vaibhav</title>
+<title>Chocolate Day ❤️ | Vaibhav & Tanya</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Poppins:wght@300;400&display=swap" rel="stylesheet">
 
 <style>
 body{
 margin:0;
-background:#140909;
 font-family:'Poppins',sans-serif;
-color:#fbe9dc;
+color:#ffe8d6;
 text-align:center;
 overflow-x:hidden;
+background:linear-gradient(-45deg,#1a0c0c,#2b0f0f,#3d1414,#1e0d0d);
+background-size:400% 400%;
+animation:gradientMove 15s ease infinite;
+}
+
+@keyframes gradientMove{
+0%{background-position:0% 50%;}
+50%{background-position:100% 50%;}
+100%{background-position:0% 50%;}
 }
 
 canvas{
 position:fixed;
 top:0;
 left:0;
-z-index:-1;
+z-index:-2;
 }
 
-/* Start Screen */
+section{
+display:none;
+padding:60px 20px;
+max-width:850px;
+margin:auto;
+opacity:0;
+transition:opacity 1s ease;
+}
+section.show{
+display:block;
+opacity:1;
+}
+
 #startScreen{
 position:fixed;
 top:0;
 left:0;
 width:100%;
 height:100%;
-background:#000;
+background:black;
 display:flex;
 flex-direction:column;
 justify-content:center;
 align-items:center;
 z-index:10000;
 color:white;
-}
-
-section{
-display:none;
-padding:80px 20px;
-max-width:900px;
-margin:auto;
+transition:opacity 1s ease;
 }
 
 h1,h2{
@@ -61,41 +75,43 @@ cursor:pointer;
 margin-top:20px;
 }
 
-/* 3D Cube */
-.cube-container{
-width:260px;
-height:260px;
-margin:40px auto;
-perspective:1000px;
-}
-.cube{
-width:100%;
-height:100%;
-position:relative;
-transform-style:preserve-3d;
-animation:rotate 20s infinite linear;
-}
-.cube div{
-position:absolute;
-width:260px;
-height:260px;
-}
-.cube img{
-width:100%;
-height:100%;
+/* Falling image rain */
+.fallImg{
+position:fixed;
+width:60px;
+height:60px;
 object-fit:cover;
-border-radius:15px;
+border-radius:10px;
+animation:fall 6s linear forwards;
+opacity:0.7;
+z-index:-1;
 }
-.front{transform:rotateY(0deg) translateZ(130px);}
-.back{transform:rotateY(180deg) translateZ(130px);}
-.right{transform:rotateY(90deg) translateZ(130px);}
-.left{transform:rotateY(-90deg) translateZ(130px);}
-.top{transform:rotateX(90deg) translateZ(130px);}
-.bottom{transform:rotateX(-90deg) translateZ(130px);}
 
-@keyframes rotate{
-from{transform:rotateX(0) rotateY(0);}
-to{transform:rotateX(360deg) rotateY(360deg);}
+@keyframes fall{
+from{transform:translateY(-100px);}
+to{transform:translateY(110vh);}
+}
+
+/* Chocolate drop */
+.choco{
+position:fixed;
+font-size:22px;
+animation:fall 5s linear forwards;
+}
+
+/* Heart particles */
+.heart{
+position:fixed;
+color:#ff8c7a;
+font-size:18px;
+animation:floatUp 8s linear forwards;
+opacity:0.7;
+z-index:-1;
+}
+
+@keyframes floatUp{
+from{transform:translateY(100vh);}
+to{transform:translateY(-10vh);}
 }
 
 /* Slideshow */
@@ -105,15 +121,41 @@ width:100%;
 border-radius:15px;
 box-shadow:0 10px 30px rgba(0,0,0,0.6);
 }
+
+/* Explosion */
+.explode{
+position:fixed;
+font-size:25px;
+animation:burst 2s linear forwards;
+}
+
+@keyframes burst{
+from{transform:translateY(0);}
+to{transform:translateY(-100vh);}
+}
+
+#foreverText{
+font-size:42px;
+margin-top:40px;
+opacity:0;
+animation:glow 2s infinite alternate;
+}
+
+@keyframes glow{
+from{text-shadow:0 0 10px #ff8c7a;}
+to{text-shadow:0 0 25px #ffb3a7;}
+}
 </style>
 </head>
 
 <body>
 
-<!-- Start Screen -->
+<canvas id="stars"></canvas>
+<canvas id="fireworks"></canvas>
+
 <div id="startScreen">
 <h1>Vaibhav ❤️ Tanya</h1>
-<p>Tap To Begin</p>
+<p>Tap To Begin Our Chocolate Universe</p>
 <button onclick="startStory()">Enter</button>
 </div>
 
@@ -121,90 +163,154 @@ box-shadow:0 10px 30px rgba(0,0,0,0.6);
 <source src="music.mp3" type="audio/mpeg">
 </audio>
 
-<!-- Section 1 -->
-<section id="intro">
-<h1>For Tanya ❤️</h1>
-<p>
-You entered my life quietly.<br>
-And everything changed.<br>
-If love means choosing someone daily —<br>
-I choose you. Always.
-</p>
-<button onclick="showCube()">Next</button>
-</section>
+<audio id="typeSound" src="https://assets.mixkit.co/sfx/preview/mixkit-typewriter-soft-click-1125.mp3"></audio>
 
-<!-- Section 2 -->
-<section id="cubeSection">
-<h2>Our Love In 3D</h2>
-<div class="cube-container">
-<div class="cube">
-<div class="front"><img src="pic1.jpg.jpeg"></div>
-<div class="back"><img src="pic2.jpg.jpeg"></div>
-<div class="right"><img src="pic3.jpg.jpeg"></div>
-<div class="left"><img src="pic4.jpg.jpeg"></div>
-<div class="top"><img src="pic5.jpg.jpeg"></div>
-<div class="bottom"><img src="pic6.jpg.jpeg"></div>
-</div>
-</div>
+<section id="messageSection">
+<h1 id="typeText"></h1>
 <button onclick="showSlideshow()">Next</button>
 </section>
 
-<!-- Section 3 -->
 <section id="slideshowSection">
-<h2>Our Journey</h2>
-
-<div class="slide"><img src="pic7.jpg.jpeg"></div>
-<div class="slide"><img src="pic8.jpg.jpeg"></div>
-<div class="slide"><img src="pic9.jpg.jpeg"></div>
-<div class="slide"><img src="pic10.jpg.jpeg"></div>
-<div class="slide"><img src="pic11.jpg.jpeg"></div>
-<div class="slide"><img src="pic12.jpg.jpeg"></div>
-<div class="slide"><img src="pic13.jpg.jpeg"></div>
-<div class="slide"><img src="pic14.jpg.jpeg"></div>
-<div class="slide"><img src="pic15.jpg.jpeg"></div>
-<div class="slide"><img src="pic16.jpg.jpeg"></div>
-<div class="slide"><img src="pic17.jpg.jpeg"></div>
-<div class="slide"><img src="pic18.jpg.jpeg"></div>
-<div class="slide"><img src="pic19.jpg.jpeg"></div>
-<div class="slide"><img src="pic20.jpg.jpeg"></div>
-
-<button onclick="nextSlide()">Next Image</button><br>
-<button onclick="showFuture()">Continue</button>
+<h2>Our Sweet Memories</h2>
+<div id="slidesContainer"></div>
+<button onclick="nextSlide()">Next Image</button>
+<br>
+<button onclick="showFinal()">Continue</button>
 </section>
 
-<!-- Section 4 -->
-<section id="futureSection">
-<h2>Choose Our Future</h2>
-<button onclick="showChoice('travel')">Travel The World 🌍</button>
-<button onclick="showChoice('home')">Build Our Dream Home 🏡</button>
-<p id="futureText"></p>
-<button onclick="showFinal()">Next</button>
-</section>
-
-<!-- Section 5 -->
 <section id="finalSection">
-<h2>Tanya... Will You Always Be Mine? ❤️</h2>
+<h2>Happy Chocolate Day My Love 🍫❤️</h2>
+<p>
+Like chocolate melting slowly,  
+you make my life sweeter every day.  
+You are my calm, my warmth, my forever.
+</p>
+<div id="foreverText">Vaibhav ❤️ Tanya Forever</div>
 </section>
 
 <script>
 
-let slideIndex = 0;
-let slides = document.getElementsByClassName("slide");
+/* Moving Stars */
+let canvas=document.getElementById("stars");
+let ctx=canvas.getContext("2d");
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
+let stars=[];
+for(let i=0;i<200;i++){
+stars.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*2});
+}
+function drawStars(){
+ctx.clearRect(0,0,canvas.width,canvas.height);
+ctx.fillStyle="white";
+stars.forEach(s=>{
+ctx.beginPath();
+ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+ctx.fill();
+});
+requestAnimationFrame(drawStars);
+}
+drawStars();
 
+/* Fireworks */
+let fwCanvas=document.getElementById("fireworks");
+let fwCtx=fwCanvas.getContext("2d");
+fwCanvas.width=window.innerWidth;
+fwCanvas.height=window.innerHeight;
+
+function firework(){
+for(let i=0;i<80;i++){
+let x=Math.random()*fwCanvas.width;
+let y=Math.random()*fwCanvas.height/2;
+fwCtx.beginPath();
+fwCtx.arc(x,y,3,0,Math.PI*2);
+fwCtx.fillStyle="#ff8c7a";
+fwCtx.fill();
+}
+setTimeout(()=>fwCtx.clearRect(0,0,fwCanvas.width,fwCanvas.height),800);
+}
+
+/* Start */
 function startStory(){
 document.getElementById("bgMusic").play().catch(()=>{});
-document.getElementById("startScreen").style.display="none";
-document.getElementById("intro").style.display="block";
+document.getElementById("startScreen").style.opacity="0";
+setTimeout(()=>{document.getElementById("startScreen").style.display="none";},1000);
+showSection("messageSection");
+startImageRain();
+startChocoDrop();
+startHeartParticles();
+typeWriter();
 }
 
-function showCube(){
-document.getElementById("intro").style.display="none";
-document.getElementById("cubeSection").style.display="block";
+/* Smooth show */
+function showSection(id){
+let sections=document.querySelectorAll("section");
+sections.forEach(sec=>sec.classList.remove("show"));
+document.getElementById(id).classList.add("show");
 }
 
+/* Typewriter */
+let text="Happy Chocolate Day My Love 🍫❤️\nYou make my life sweeter every single day.";
+let i=0;
+function typeWriter(){
+if(i<text.length){
+document.getElementById("typeText").innerHTML+=text.charAt(i);
+document.getElementById("typeSound").play().catch(()=>{});
+i++;
+setTimeout(typeWriter,60);
+}
+}
+
+/* Image Rain */
+function startImageRain(){
+setInterval(()=>{
+let img=document.createElement("img");
+let random=Math.floor(Math.random()*20)+1;
+img.src="pic"+random+".jpg.jpeg";
+img.className="fallImg";
+img.style.left=Math.random()*100+"vw";
+document.body.appendChild(img);
+setTimeout(()=>img.remove(),6000);
+},1000);
+}
+
+/* Chocolate Drop */
+function startChocoDrop(){
+setInterval(()=>{
+let c=document.createElement("div");
+c.className="choco";
+c.innerHTML="🍫";
+c.style.left=Math.random()*100+"vw";
+document.body.appendChild(c);
+setTimeout(()=>c.remove(),5000);
+},1500);
+}
+
+/* Heart particles */
+function startHeartParticles(){
+setInterval(()=>{
+let h=document.createElement("div");
+h.className="heart";
+h.innerHTML="❤️";
+h.style.left=Math.random()*100+"vw";
+document.body.appendChild(h);
+setTimeout(()=>h.remove(),8000);
+},1200);
+}
+
+/* Slideshow */
+let slideIndex=0;
+let slides=[];
 function showSlideshow(){
-document.getElementById("cubeSection").style.display="none";
-document.getElementById("slideshowSection").style.display="block";
+showSection("slideshowSection");
+let container=document.getElementById("slidesContainer");
+container.innerHTML="";
+for(let i=1;i<=20;i++){
+let div=document.createElement("div");
+div.className="slide";
+div.innerHTML=`<img src="pic${i}.jpg.jpeg">`;
+container.appendChild(div);
+}
+slides=document.getElementsByClassName("slide");
 showSlide();
 }
 
@@ -217,29 +323,28 @@ slides[slideIndex].style.display="block";
 
 function nextSlide(){
 slideIndex++;
-if(slideIndex>=slides.length){
-slideIndex=0;
-}
+if(slideIndex>=slides.length){slideIndex=0;}
 showSlide();
 }
 
-function showFuture(){
-document.getElementById("slideshowSection").style.display="none";
-document.getElementById("futureSection").style.display="block";
-}
-
-function showChoice(choice){
-if(choice=="travel"){
-document.getElementById("futureText").innerHTML="We explore the world — but home is wherever you are.";
-}
-if(choice=="home"){
-document.getElementById("futureText").innerHTML="We build a peaceful world filled with love and chocolate.";
-}
-}
-
+/* Final */
 function showFinal(){
-document.getElementById("futureSection").style.display="none";
-document.getElementById("finalSection").style.display="block";
+showSection("finalSection");
+document.getElementById("foreverText").style.opacity="1";
+explode();
+firework();
+}
+
+/* Explosion */
+function explode(){
+for(let i=0;i<60;i++){
+let h=document.createElement("div");
+h.className="explode";
+h.innerHTML="🍫";
+h.style.left=Math.random()*100+"vw";
+document.body.appendChild(h);
+setTimeout(()=>h.remove(),2000);
+}
 }
 
 </script>
