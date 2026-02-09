@@ -58,7 +58,6 @@ justify-content:center;
 align-items:center;
 z-index:10000;
 color:white;
-transition:opacity 1s ease;
 }
 
 h1,h2{
@@ -72,46 +71,43 @@ border-radius:30px;
 background:#ff8c7a;
 color:white;
 cursor:pointer;
-margin-top:20px;
+margin-top:25px;
 }
 
-/* Falling image rain */
+#typeText{
+white-space:pre-line;
+line-height:1.8;
+font-size:18px;
+}
+
+/* Floating hearts */
+.heart{
+position:fixed;
+color:#ff8c7a;
+font-size:18px;
+animation:floatUp 8s linear forwards;
+opacity:0.6;
+z-index:-1;
+}
+@keyframes floatUp{
+from{transform:translateY(100vh);}
+to{transform:translateY(-10vh);}
+}
+
+/* Image rain */
 .fallImg{
 position:fixed;
 width:60px;
 height:60px;
 object-fit:cover;
 border-radius:10px;
-animation:fall 6s linear forwards;
-opacity:0.7;
+animation:fall 7s linear forwards;
+opacity:0.6;
 z-index:-1;
 }
-
 @keyframes fall{
 from{transform:translateY(-100px);}
 to{transform:translateY(110vh);}
-}
-
-/* Chocolate drop */
-.choco{
-position:fixed;
-font-size:22px;
-animation:fall 5s linear forwards;
-}
-
-/* Heart particles */
-.heart{
-position:fixed;
-color:#ff8c7a;
-font-size:18px;
-animation:floatUp 8s linear forwards;
-opacity:0.7;
-z-index:-1;
-}
-
-@keyframes floatUp{
-from{transform:translateY(100vh);}
-to{transform:translateY(-10vh);}
 }
 
 /* Slideshow */
@@ -122,25 +118,34 @@ border-radius:15px;
 box-shadow:0 10px 30px rgba(0,0,0,0.6);
 }
 
+/* Kiss animation */
+.kiss{
+font-size:80px;
+animation:kissMove 2s ease forwards;
+}
+@keyframes kissMove{
+0%{transform:scale(0.5);opacity:0;}
+100%{transform:scale(1);opacity:1;}
+}
+
 /* Explosion */
 .explode{
 position:fixed;
 font-size:25px;
 animation:burst 2s linear forwards;
 }
-
 @keyframes burst{
 from{transform:translateY(0);}
 to{transform:translateY(-100vh);}
 }
 
+/* Forever glow */
 #foreverText{
 font-size:42px;
 margin-top:40px;
 opacity:0;
 animation:glow 2s infinite alternate;
 }
-
 @keyframes glow{
 from{text-shadow:0 0 10px #ff8c7a;}
 to{text-shadow:0 0 25px #ffb3a7;}
@@ -155,7 +160,7 @@ to{text-shadow:0 0 25px #ffb3a7;}
 
 <div id="startScreen">
 <h1>Vaibhav ❤️ Tanya</h1>
-<p>Tap To Begin Our Chocolate Universe</p>
+<p>Tap To Begin Our Chocolate Story</p>
 <button onclick="startStory()">Enter</button>
 </div>
 
@@ -166,25 +171,34 @@ to{text-shadow:0 0 25px #ffb3a7;}
 <audio id="typeSound" src="https://assets.mixkit.co/sfx/preview/mixkit-typewriter-soft-click-1125.mp3"></audio>
 
 <section id="messageSection">
-<h1 id="typeText"></h1>
-<button onclick="showSlideshow()">Next</button>
+<h1>Happy Chocolate Day Tanya 🍫❤️</h1>
+<p id="typeText"></p>
+<button onclick="showSlideshow()">Continue</button>
 </section>
 
 <section id="slideshowSection">
 <h2>Our Sweet Memories</h2>
 <div id="slidesContainer"></div>
-<button onclick="nextSlide()">Next Image</button>
-<br>
+<button onclick="showQuiz()">Continue</button>
+</section>
+
+<section id="quizSection">
+<h2>Chocolate Love Quiz 💌</h2>
+<p id="question"></p>
+<div id="options"></div>
+<p id="scoreText"></p>
+<button onclick="nextQuestion()">Next</button>
+</section>
+
+<section id="futureSection">
+<h2>Our Future 🍫✨</h2>
+<p id="futureText"></p>
 <button onclick="showFinal()">Continue</button>
 </section>
 
 <section id="finalSection">
-<h2>Happy Chocolate Day My Love 🍫❤️</h2>
-<p>
-Like chocolate melting slowly,  
-you make my life sweeter every day.  
-You are my calm, my warmth, my forever.
-</p>
+<div class="kiss">🍫💋🍫</div>
+<p id="finalMessage"></p>
 <div id="foreverText">Vaibhav ❤️ Tanya Forever</div>
 </section>
 
@@ -211,82 +225,62 @@ requestAnimationFrame(drawStars);
 }
 drawStars();
 
-/* Fireworks */
-let fwCanvas=document.getElementById("fireworks");
-let fwCtx=fwCanvas.getContext("2d");
-fwCanvas.width=window.innerWidth;
-fwCanvas.height=window.innerHeight;
-
-function firework(){
-for(let i=0;i<80;i++){
-let x=Math.random()*fwCanvas.width;
-let y=Math.random()*fwCanvas.height/2;
-fwCtx.beginPath();
-fwCtx.arc(x,y,3,0,Math.PI*2);
-fwCtx.fillStyle="#ff8c7a";
-fwCtx.fill();
-}
-setTimeout(()=>fwCtx.clearRect(0,0,fwCanvas.width,fwCanvas.height),800);
-}
-
 /* Start */
 function startStory(){
 document.getElementById("bgMusic").play().catch(()=>{});
-document.getElementById("startScreen").style.opacity="0";
-setTimeout(()=>{document.getElementById("startScreen").style.display="none";},1000);
+document.getElementById("startScreen").style.display="none";
 showSection("messageSection");
+startHearts();
 startImageRain();
-startChocoDrop();
-startHeartParticles();
 typeWriter();
 }
 
-/* Smooth show */
+/* Smooth section */
 function showSection(id){
-let sections=document.querySelectorAll("section");
-sections.forEach(sec=>sec.classList.remove("show"));
+document.querySelectorAll("section").forEach(s=>s.classList.remove("show"));
 document.getElementById(id).classList.add("show");
 }
 
-/* Typewriter */
-let text="Happy Chocolate Day My Love 🍫❤️\nYou make my life sweeter every single day.";
+/* Long emotional message */
+let message=`Like chocolate melting slowly in warmth,
+you entered my life and made everything softer.
+
+You didn’t just add sweetness.
+You added meaning.
+
+You turned ordinary days into memories.
+You turned silence into comfort.
+You turned chaos into calm.
+
+When I think of chocolate,
+I think of richness.
+Depth.
+Warmth.
+
+And when I think of you,
+I feel the same things.
+
+You are the quiet strength behind my smile.
+The calm behind my storms.
+The warmth behind my winters.
+
+On this Chocolate Day,
+I celebrate you.
+I choose you.
+Today, tomorrow, and always.`;
+
 let i=0;
 function typeWriter(){
-if(i<text.length){
-document.getElementById("typeText").innerHTML+=text.charAt(i);
+if(i<message.length){
+document.getElementById("typeText").innerHTML+=message.charAt(i);
 document.getElementById("typeSound").play().catch(()=>{});
 i++;
-setTimeout(typeWriter,60);
+setTimeout(typeWriter,55);
 }
 }
 
-/* Image Rain */
-function startImageRain(){
-setInterval(()=>{
-let img=document.createElement("img");
-let random=Math.floor(Math.random()*20)+1;
-img.src="pic"+random+".jpg.jpeg";
-img.className="fallImg";
-img.style.left=Math.random()*100+"vw";
-document.body.appendChild(img);
-setTimeout(()=>img.remove(),6000);
-},1000);
-}
-
-/* Chocolate Drop */
-function startChocoDrop(){
-setInterval(()=>{
-let c=document.createElement("div");
-c.className="choco";
-c.innerHTML="🍫";
-c.style.left=Math.random()*100+"vw";
-document.body.appendChild(c);
-setTimeout(()=>c.remove(),5000);
-},1500);
-}
-
-/* Heart particles */
-function startHeartParticles(){
+/* Floating hearts */
+function startHearts(){
 setInterval(()=>{
 let h=document.createElement("div");
 h.className="heart";
@@ -297,7 +291,20 @@ setTimeout(()=>h.remove(),8000);
 },1200);
 }
 
-/* Slideshow */
+/* Image rain */
+function startImageRain(){
+setInterval(()=>{
+let img=document.createElement("img");
+let random=Math.floor(Math.random()*20)+1;
+img.src="pic"+random+".jpg.jpeg";
+img.className="fallImg";
+img.style.left=Math.random()*100+"vw";
+document.body.appendChild(img);
+setTimeout(()=>img.remove(),7000);
+},1500);
+}
+
+/* Slideshow auto */
 let slideIndex=0;
 let slides=[];
 function showSlideshow(){
@@ -311,28 +318,81 @@ div.innerHTML=`<img src="pic${i}.jpg.jpeg">`;
 container.appendChild(div);
 }
 slides=document.getElementsByClassName("slide");
-showSlide();
+autoSlide();
 }
 
-function showSlide(){
+function autoSlide(){
 for(let i=0;i<slides.length;i++){
 slides[i].style.display="none";
 }
 slides[slideIndex].style.display="block";
-}
-
-function nextSlide(){
 slideIndex++;
-if(slideIndex>=slides.length){slideIndex=0;}
-showSlide();
+if(slideIndex<slides.length){
+setTimeout(autoSlide,3000);
+}
 }
 
-/* Final */
+/* Quiz */
+let questions=[
+{q:"Who loves Tanya the most?",options:["Vaibhav ❤️","Someone Else"],answer:0},
+{q:"Chocolate + Tanya equals?",options:["Sweetest Combo ❤️","Normal"],answer:0},
+{q:"Vaibhav chooses Tanya for?",options:["Today","Forever ❤️"],answer:1},
+{q:"Tanya’s smile feels like?",options:["Sunshine ❤️","Homework"],answer:0},
+{q:"Best partner award goes to?",options:["Tanya ❤️","Nobody"],answer:0}
+];
+
+let currentQuestion=0;
+let score=0;
+
+function showQuiz(){
+showSection("quizSection");
+loadQuestion();
+}
+
+function loadQuestion(){
+let q=questions[currentQuestion];
+document.getElementById("question").innerHTML=q.q;
+let html="";
+q.options.forEach((opt,i)=>{
+html+=`<button onclick="checkAnswer(${i})">${opt}</button><br>`;
+});
+document.getElementById("options").innerHTML=html;
+document.getElementById("scoreText").innerHTML="Score: "+score+"/"+questions.length;
+}
+
+function checkAnswer(i){
+if(i==questions[currentQuestion].answer){
+score++;
+alert("Correct ❤️");
+}else{
+alert("Nice try 😉");
+}
+}
+
+function nextQuestion(){
+currentQuestion++;
+if(currentQuestion>=questions.length){
+showFuture();
+return;
+}
+loadQuestion();
+}
+
+/* Future */
+function showFuture(){
+showSection("futureSection");
+document.getElementById("futureText").innerHTML=
+"I imagine us years from now — still laughing, still choosing each other, still finding sweetness in the smallest things.";
+}
+
+/* Final sure kiss */
 function showFinal(){
 showSection("finalSection");
+document.getElementById("finalMessage").innerHTML=
+"Tanya, you are my sweetness, my calm, my forever. Happy Chocolate Day ❤️";
 document.getElementById("foreverText").style.opacity="1";
 explode();
-firework();
+fireworks();
 }
 
 /* Explosion */
@@ -345,6 +405,24 @@ h.style.left=Math.random()*100+"vw";
 document.body.appendChild(h);
 setTimeout(()=>h.remove(),2000);
 }
+}
+
+/* Fireworks */
+let fw=document.getElementById("fireworks");
+let fwCtx=fw.getContext("2d");
+fw.width=window.innerWidth;
+fw.height=window.innerHeight;
+
+function fireworks(){
+for(let i=0;i<80;i++){
+let x=Math.random()*fw.width;
+let y=Math.random()*fw.height/2;
+fwCtx.beginPath();
+fwCtx.arc(x,y,3,0,Math.PI*2);
+fwCtx.fillStyle="#ff8c7a";
+fwCtx.fill();
+}
+setTimeout(()=>fwCtx.clearRect(0,0,fw.width,fw.height),800);
 }
 
 </script>
