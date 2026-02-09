@@ -37,13 +37,14 @@ flex-direction:column;
 justify-content:center;
 align-items:center;
 z-index:10000;
+color:white;
 }
 
 section{
+display:none;
 padding:80px 20px;
 max-width:900px;
 margin:auto;
-display:none;
 }
 
 h1,h2{
@@ -60,29 +61,11 @@ cursor:pointer;
 margin-top:20px;
 }
 
-/* Chocolate drip */
-.drip{
-height:120px;
-background:#3a1c1c;
-position:relative;
-}
-.drip:after{
-content:"";
-position:absolute;
-top:100%;
-width:100%;
-height:80px;
-background:radial-gradient(circle at 20% 0,#3a1c1c 60px,transparent 61px),
-radial-gradient(circle at 50% 0,#3a1c1c 50px,transparent 51px),
-radial-gradient(circle at 80% 0,#3a1c1c 65px,transparent 66px);
-background-repeat:no-repeat;
-}
-
 /* 3D Cube */
 .cube-container{
 width:260px;
 height:260px;
-margin:50px auto;
+margin:40px auto;
 perspective:1000px;
 }
 .cube{
@@ -115,21 +98,12 @@ from{transform:rotateX(0) rotateY(0);}
 to{transform:rotateX(360deg) rotateY(360deg);}
 }
 
+/* Slideshow */
 .slide{display:none;}
 .slide img{
 width:100%;
 border-radius:15px;
 box-shadow:0 10px 30px rgba(0,0,0,0.6);
-}
-
-.hearts{
-position:fixed;
-font-size:20px;
-animation:float 6s linear infinite;
-}
-@keyframes float{
-from{transform:translateY(100vh);}
-to{transform:translateY(-10vh);}
 }
 </style>
 </head>
@@ -140,26 +114,23 @@ to{transform:translateY(-10vh);}
 <div id="startScreen">
 <h1>Vaibhav ❤️ Tanya</h1>
 <p>Tap To Begin</p>
-<button id="startBtn">Enter</button>
+<button onclick="startStory()">Enter</button>
 </div>
-
-<canvas id="stars"></canvas>
 
 <audio id="bgMusic" loop>
 <source src="music.mp3" type="audio/mpeg">
 </audio>
 
-<div class="drip"></div>
-
 <!-- Section 1 -->
 <section id="intro">
 <h1>For Tanya ❤️</h1>
 <p>
-You entered my life quietly.  
-And everything changed.  
-If love means choosing someone daily —  
+You entered my life quietly.<br>
+And everything changed.<br>
+If love means choosing someone daily —<br>
 I choose you. Always.
 </p>
+<button onclick="showCube()">Next</button>
 </section>
 
 <!-- Section 2 -->
@@ -175,6 +146,7 @@ I choose you. Always.
 <div class="bottom"><img src="pic6.jpg.jpeg"></div>
 </div>
 </div>
+<button onclick="showSlideshow()">Next</button>
 </section>
 
 <!-- Section 3 -->
@@ -196,6 +168,8 @@ I choose you. Always.
 <div class="slide"><img src="pic19.jpg.jpeg"></div>
 <div class="slide"><img src="pic20.jpg.jpeg"></div>
 
+<button onclick="nextSlide()">Next Image</button><br>
+<button onclick="showFuture()">Continue</button>
 </section>
 
 <!-- Section 4 -->
@@ -204,74 +178,56 @@ I choose you. Always.
 <button onclick="showChoice('travel')">Travel The World 🌍</button>
 <button onclick="showChoice('home')">Build Our Dream Home 🏡</button>
 <p id="futureText"></p>
+<button onclick="showFinal()">Next</button>
 </section>
 
 <!-- Section 5 -->
 <section id="finalSection">
-<h2 id="finalText"></h2>
+<h2>Tanya... Will You Always Be Mine? ❤️</h2>
 </section>
 
 <script>
 
-/* Start Flow */
-const startBtn = document.getElementById("startBtn");
-const startScreen = document.getElementById("startScreen");
-const bgMusic = document.getElementById("bgMusic");
-
-startBtn.addEventListener("click", function(){
-bgMusic.play();
-startScreen.style.display="none";
-startStory();
-});
+let slideIndex = 0;
+let slides = document.getElementsByClassName("slide");
 
 function startStory(){
+document.getElementById("bgMusic").play().catch(()=>{});
+document.getElementById("startScreen").style.display="none";
 document.getElementById("intro").style.display="block";
+}
 
-setTimeout(()=>{
+function showCube(){
+document.getElementById("intro").style.display="none";
 document.getElementById("cubeSection").style.display="block";
-},8000);
+}
 
-setTimeout(()=>{
+function showSlideshow(){
+document.getElementById("cubeSection").style.display="none";
 document.getElementById("slideshowSection").style.display="block";
-startSlideshow();
-},16000);
+showSlide();
 }
 
-/* Slideshow Runs Once */
-let slideIndex=0;
-let slides=document.getElementsByClassName("slide");
-let totalSlides=slides.length;
-
-function startSlideshow(){
-showSlides();
-}
-
-function showSlides(){
-for(let i=0;i<totalSlides;i++){
+function showSlide(){
+for(let i=0;i<slides.length;i++){
 slides[i].style.display="none";
 }
+slides[slideIndex].style.display="block";
+}
 
+function nextSlide(){
 slideIndex++;
+if(slideIndex>=slides.length){
+slideIndex=0;
+}
+showSlide();
+}
 
-if(slideIndex>totalSlides){
-setTimeout(()=>{
+function showFuture(){
+document.getElementById("slideshowSection").style.display="none";
 document.getElementById("futureSection").style.display="block";
-},3000);
-
-setTimeout(()=>{
-document.getElementById("finalSection").style.display="block";
-document.getElementById("finalText").innerHTML="Tanya... Will You Always Be Mine? ❤️";
-explodeHearts();
-},15000);
-
-return;
 }
 
-slides[slideIndex-1].style.display="block";
-setTimeout(showSlides,4000);
-}
-
-/* Future Choice */
 function showChoice(choice){
 if(choice=="travel"){
 document.getElementById("futureText").innerHTML="We explore the world — but home is wherever you are.";
@@ -281,49 +237,10 @@ document.getElementById("futureText").innerHTML="We build a peaceful world fille
 }
 }
 
-/* Hearts Explosion */
-function explodeHearts(){
-for(let i=0;i<60;i++){
-let h=document.createElement("div");
-h.className="hearts";
-h.innerHTML="❤️";
-h.style.left=Math.random()*100+"vw";
-h.style.fontSize=(15+Math.random()*25)+"px";
-document.body.appendChild(h);
-setTimeout(()=>h.remove(),6000);
+function showFinal(){
+document.getElementById("futureSection").style.display="none";
+document.getElementById("finalSection").style.display="block";
 }
-}
-
-/* Chocolate Rain */
-setInterval(()=>{
-let c=document.createElement("div");
-c.className="hearts";
-c.innerHTML="🍫";
-c.style.left=Math.random()*100+"vw";
-document.body.appendChild(c);
-setTimeout(()=>c.remove(),6000);
-},2000);
-
-/* Stars */
-let canvas=document.getElementById("stars");
-let ctx=canvas.getContext("2d");
-canvas.width=window.innerWidth;
-canvas.height=window.innerHeight;
-let stars=[];
-for(let i=0;i<150;i++){
-stars.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*2});
-}
-function draw(){
-ctx.clearRect(0,0,canvas.width,canvas.height);
-ctx.fillStyle="white";
-stars.forEach(s=>{
-ctx.beginPath();
-ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
-ctx.fill();
-});
-requestAnimationFrame(draw);
-}
-draw();
 
 </script>
 
