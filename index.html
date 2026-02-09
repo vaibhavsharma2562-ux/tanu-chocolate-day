@@ -170,10 +170,9 @@ to{transform:translateY(-10vh);}
 
 <canvas id="stars"></canvas>
 
-<audio autoplay loop>
+<audio id="bgMusic" loop>
 <source src="music.mp3" type="audio/mpeg">
 </audio>
-
 <div class="drip"></div>
 
 <section>
@@ -334,7 +333,15 @@ ctx.fill();
 requestAnimationFrame(draw);
 }
 draw();
+let musicStarted = false;
 
+document.addEventListener("click", function() {
+    if (!musicStarted) {
+        let audio = document.getElementById("bgMusic");
+        audio.play();
+        musicStarted = true;
+    }
+});
 </script>
 
 </body>
